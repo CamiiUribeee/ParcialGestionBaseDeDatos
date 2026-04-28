@@ -1,0 +1,22 @@
+[
+  { "_id": { "$oid": "661000000000000000000001" }, "nombre": "Carlos Pérez", "correo": "carlos1@mail.com", "saldo": 500000, "pais": "Colombia" },
+  { "_id": { "$oid": "661000000000000000000002" }, "nombre": "Ana Gómez", "correo": "ana2@mail.com", "saldo": 300000, "pais": "México" },
+  { "_id": { "$oid": "661000000000000000000003" }, "nombre": "Luis Torres", "correo": "luis3@mail.com", "saldo": 700000, "pais": "Argentina" },
+  { "_id": { "$oid": "661000000000000000000004" }, "nombre": "Sofía Rojas", "correo": "sofia4@mail.com", "saldo": 450000, "pais": "Chile" },
+  { "_id": { "$oid": "661000000000000000000005" }, "nombre": "Pedro Ramírez", "correo": "pedro5@mail.com", "saldo": 600000, "pais": "Perú" },
+  { "_id": { "$oid": "661000000000000000000006" }, "nombre": "Laura Díaz", "correo": "laura6@mail.com", "saldo": 350000, "pais": "Colombia" },
+  { "_id": { "$oid": "661000000000000000000007" }, "nombre": "Juan Castro", "correo": "juan7@mail.com", "saldo": 800000, "pais": "México" },
+  { "_id": { "$oid": "661000000000000000000008" }, "nombre": "Valentina Ruiz", "correo": "vale8@mail.com", "saldo": 200000, "pais": "Argentina" },
+  { "_id": { "$oid": "661000000000000000000009" }, "nombre": "Andrés Mejía", "correo": "andres9@mail.com", "saldo": 900000, "pais": "Colombia" },
+  { "_id": { "$oid": "66100000000000000000000a" }, "nombre": "Camila Herrera", "correo": "camila10@mail.com", "saldo": 150000, "pais": "Chile" },
+  { "_id": { "$oid": "66100000000000000000000b" }, "nombre": "Diego Morales", "correo": "diego11@mail.com", "saldo": 650000, "pais": "Perú" },
+  { "_id": { "$oid": "66100000000000000000000c" }, "nombre": "Natalia Vega", "correo": "natalia12@mail.com", "saldo": 400000, "pais": "México" },
+  { "_id": { "$oid": "66100000000000000000000d" }, "nombre": "Jorge Silva", "correo": "jorge13@mail.com", "saldo": 720000, "pais": "Argentina" },
+  { "_id": { "$oid": "66100000000000000000000e" }, "nombre": "Paula Mendoza", "correo": "paula14@mail.com", "saldo": 520000, "pais": "Colombia" },
+  { "_id": { "$oid": "66100000000000000000000f" }, "nombre": "Ricardo León", "correo": "ricardo15@mail.com", "saldo": 330000, "pais": "Chile" },
+  { "_id": { "$oid": "661000000000000000000010" }, "nombre": "Daniela Pardo", "correo": "daniela16@mail.com", "saldo": 280000, "pais": "Perú" },
+  { "_id": { "$oid": "661000000000000000000011" }, "nombre": "Felipe Cruz", "correo": "felipe17@mail.com", "saldo": 610000, "pais": "México" },
+  { "_id": { "$oid": "661000000000000000000012" }, "nombre": "María López", "correo": "maria18@mail.com", "saldo": 490000, "pais": "Colombia" },
+  { "_id": { "$oid": "661000000000000000000013" }, "nombre": "Hugo Vargas", "correo": "hugo19@mail.com", "saldo": 770000, "pais": "Argentina" },
+  { "_id": { "$oid": "661000000000000000000014" }, "nombre": "Elena Navarro", "correo": "elena20@mail.com", "saldo": 360000, "pais": "Chile" }
+]

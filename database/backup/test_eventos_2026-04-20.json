@@ -1,0 +1,229 @@
+[
+  {
+    "_id": {
+      "$oid": "662000000000000000000001"
+    },
+    "deporte": "Fútbol",
+    "fecha": "2026-05-01",
+    "cuotas": {
+      "local": 1.8,
+      "empate": 3.2,
+      "visitante": 4
+    }
+  },
+  {
+    "_id": {
+      "$oid": "662000000000000000000002"
+    },
+    "deporte": "Baloncesto",
+    "fecha": "2026-05-02",
+    "cuotas": {
+      "local": 1.5,
+      "visitante": 2.5
+    }
+  },
+  {
+    "_id": {
+      "$oid": "662000000000000000000003"
+    },
+    "deporte": "Tenis",
+    "fecha": "2026-05-03",
+    "cuotas": {
+      "jugador1": 1.9,
+      "jugador2": 1.9
+    }
+  },
+  {
+    "_id": {
+      "$oid": "662000000000000000000004"
+    },
+    "deporte": "Fútbol",
+    "fecha": "2026-05-04",
+    "cuotas": {
+      "local": 2,
+      "empate": 3,
+      "visitante": 3.5
+    }
+  },
+  {
+    "_id": {
+      "$oid": "662000000000000000000005"
+    },
+    "deporte": "Baloncesto",
+    "fecha": "2026-05-05",
+    "cuotas": {
+      "local": 1.7,
+      "visitante": 2.2
+    }
+  },
+  {
+    "_id": {
+      "$oid": "662000000000000000000006"
+    },
+    "deporte": "Tenis",
+    "fecha": "2026-05-06",
+    "cuotas": {
+      "jugador1": 2.1,
+      "jugador2": 1.8
+    }
+  },
+  {
+    "_id": {
+      "$oid": "662000000000000000000007"
+    },
+    "deporte": "Fútbol",
+    "fecha": "2026-05-07",
+    "cuotas": {
+      "local": 1.6,
+      "empate": 3.5,
+      "visitante": 5
+    }
+  },
+  {
+    "_id": {
+      "$oid": "662000000000000000000008"
+    },
+    "deporte": "Baloncesto",
+    "fecha": "2026-05-08",
+    "cuotas": {
+      "local": 1.4,
+      "visitante": 2.8
+    }
+  },
+  {
+    "_id": {
+      "$oid": "662000000000000000000009"
+    },
+    "deporte": "Tenis",
+    "fecha": "2026-05-09",
+    "cuotas": {
+      "jugador1": 1.6,
+      "jugador2": 2.3
+    }
+  },
+  {
+    "_id": {
+      "$oid": "66200000000000000000000a"
+    },
+    "deporte": "Fútbol",
+    "fecha": "2026-05-10",
+    "cuotas": {
+      "local": 2.3,
+      "empate": 3.1,
+      "visitante": 2.9
+    }
+  },
+  {
+    "_id": {
+      "$oid": "66200000000000000000000b"
+    },
+    "deporte": "Baloncesto",
+    "fecha": "2026-05-11",
+    "cuotas": {
+      "local": 1.9,
+      "visitante": 1.9
+    }
+  },
+  {
+    "_id": {
+      "$oid": "66200000000000000000000c"
+    },
+    "deporte": "Tenis",
+    "fecha": "2026-05-12",
+    "cuotas": {
+      "jugador1": 1.5,
+      "jugador2": 2.6
+    }
+  },
+  {
+    "_id": {
+      "$oid": "66200000000000000000000d"
+    },
+    "deporte": "Fútbol",
+    "fecha": "2026-05-13",
+    "cuotas": {
+      "local": 1.8,
+      "empate": 3.3,
+      "visitante": 4.2
+    }
+  },
+  {
+    "_id": {
+      "$oid": "66200000000000000000000e"
+    },
+    "deporte": "Baloncesto",
+    "fecha": "2026-05-14",
+    "cuotas": {
+      "local": 1.6,
+      "visitante": 2.4
+    }
+  },
+  {
+    "_id": {
+      "$oid": "66200000000000000000000f"
+    },
+    "deporte": "Tenis",
+    "fecha": "2026-05-15",
+    "cuotas": {
+      "jugador1": 2,
+      "jugador2": 1.7
+    }
+  },
+  {
+    "_id": {
+      "$oid": "662000000000000000000010"
+    },
+    "deporte": "Fútbol",
+    "fecha": "2026-05-16",
+    "cuotas": {
+      "local": 2.1,
+      "empate": 3.2,
+      "visitante": 3
+    }
+  },
+  {
+    "_id": {
+      "$oid": "662000000000000000000011"
+    },
+    "deporte": "Baloncesto",
+    "fecha": "2026-05-17",
+    "cuotas": {
+      "local": 1.5,
+      "visitante": 2.6
+    }
+  },
+  {
+    "_id": {
+      "$oid": "662000000000000000000012"
+    },
+    "deporte": "Tenis",
+    "fecha": "2026-05-18",
+    "cuotas": {
+      "jugador1": 1.7,
+      "jugador2": 2.2
+    }
+  },
+  {
+    "_id": {
+      "$oid": "662000000000000000000013"
+    },
+    "deporte": "Fútbol",
+    "fecha": "2026-05-19",
+    "cuotas": {
+      "local": 1.9,
+      "empate": 3,
+      "visitante": 3.8
+    }
+  },
+  {
+    "_id": {
+      "$oid": "662000000000000000000014"
+    },
+    "deporte": "Baloncesto",
+    "fecha": "2026-05-20",
+    "cuotas": {
+      "local": 1.8,
+      "visitante": 2
+    }
+  }
+]
