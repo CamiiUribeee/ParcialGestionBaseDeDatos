@@ -1,7 +1,5 @@
 import { checkSchema } from "express-validator";
 
-import { checkSchema } from "express-validator";
-
 export const postApuestaValidator = checkSchema({
 
     usuario_id: {
@@ -29,16 +27,6 @@ export const postApuestaValidator = checkSchema({
         isFloat: {
             options: { min: 1000 },
             errorMessage: 'El monto apostado debe ser un número mayor a 1000'
-        }
-    },
-
-    estado: {
-        notEmpty: {
-            errorMessage: 'El estado es obligatorio'
-        },
-        isIn: {
-            options: [['pendiente', 'ganada', 'perdida']],
-            errorMessage: 'El estado debe ser: pendiente, ganada o perdida'
         }
     },
 
@@ -72,6 +60,7 @@ export const deleteApuestaValidator = checkSchema({
 export const updateApuestaValidator = checkSchema({
 
     id: {
+        in: ["params"],
         notEmpty: {
             errorMessage: 'El id no puede estar vacío'
         },
@@ -81,34 +70,13 @@ export const updateApuestaValidator = checkSchema({
     },
 
     estado: {
-        optional: true,
+        in: ["body"],
+        notEmpty: {
+            errorMessage: 'El estado es obligatorio'
+        },
         isIn: {
-            options: [['pendiente', 'ganada', 'perdida']],
-            errorMessage: 'El estado debe ser: pendiente, ganada o perdida'
-        }
-    },
-
-    monto_apostado: {
-        optional: true,
-        isFloat: {
-            options: { min: 1000 },
-            errorMessage: 'El monto apostado debe ser un número mayor a 1000'
-        }
-    },
-
-    cuota_seleccionada: {
-        optional: true,
-        isFloat: {
-            options: { min: 1.01 },
-            errorMessage: 'La cuota seleccionada debe ser un número mayor a 1'
-        }
-    },
-
-    posible_ganancia: {
-        optional: true,
-        isFloat: {
-            options: { min: 0 },
-            errorMessage: 'La posible ganancia debe ser un número positivo'
+            options: [['ganada', 'perdida', 'en_curso']],
+            errorMessage: 'El estado debe ser: ganada, perdida o en_curso'
         }
     }
 

@@ -50,26 +50,30 @@ export const updateSaldo = async (id) => {
         };
     }
 
+    //CORRECION, OJO
     let gananciasTotales = 0;
+
     for (const apuesta of apuestasGanadas) {
-        gananciasTotales += apuesta.monto_apostado * apuesta.cuota_seleccionada;
+        gananciasTotales += apuesta.posible_ganancia;
     }
 
-    const nuevoSaldo = usuario.saldo + gananciasTotales;
+    const saldoActual = Number(usuario.saldo) || 0;
+    const nuevoSaldo = saldoActual + gananciasTotales;
 
     const updateResult = await connection.collection(USUARIO_COLLECTION).updateOne(
         { _id: new ObjectId(id) },
         { $set: { saldo: nuevoSaldo } }
     );
 
-    if (updateResult.modifiedCount === 0) {
-        throw new Error("No se pudo actualizar el saldo");
+    //NUEVA CORECCION
+    if (updateResult.matchedCount === 0) {
+        throw new Error("Usuario no encontrado para actualizar");
     }
 
     return {
         msn: "Apuestas ganadas procesadas exitosamente",
         ganancias_totales: gananciasTotales,
-        saldo_anterior: usuario.saldo,
+        saldo_anterior: saldoActual,
         saldo_nuevo: nuevoSaldo,
         apuestas_procesadas: apuestasGanadas.length
     };

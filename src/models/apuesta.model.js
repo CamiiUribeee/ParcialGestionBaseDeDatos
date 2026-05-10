@@ -144,7 +144,7 @@ export const porDeporte = async(nombre) => {
                 }
             },
             {
-                $unwind: "$evento"
+                $unwind: "$usuario" //corección porque estaba mal 
             },
             {
                 $project: {
