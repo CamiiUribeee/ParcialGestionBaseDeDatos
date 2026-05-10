@@ -27,45 +27,54 @@ export const postUsuarioModelMultiple = async (json) =>{
     return result;
 }
 
-//Terminar la funcion de actualizar el saldo de un usuario 
 export const updateSaldo = async (id) => {
     const connection = await connectionTournament();
-    const usuario = await connection.collection(USUARIO_COLLECTION).find({_id: new ObjectId(id)});
+    
+    const usuario = await connection.collection(USUARIO_COLLECTION).findOne({ 
+        _id: new ObjectId(id) 
+    });
 
     if (!usuario) {
         throw new Error("Usuario no encontrado");
     }
 
-    const apuestasGanadas = await connection.collection(APUESTA_COLLECTION).find({usuario_id: new ObjectId(id), estado :"ganada"}).toArray();
+    const apuestasGanadas = await connection.collection(APUESTA_COLLECTION).find({
+        usuario_id: new ObjectId(id), 
+        estado: "ganada",
+    }).toArray();
 
     if (apuestasGanadas.length === 0) {
         return {
-            msn: "No hay apuestas ganadas pendientes de pago",
+            msn: "No hay apuestas ganadas pendientes",
             saldo_actual: usuario.saldo,
             ganancias_totales: 0
         };
     }
 
     let gananciasTotales = 0;
-
     for (const apuesta of apuestasGanadas) {
-        gananciasTotales += apuesta.monto * apuesta.cuota;
+        gananciasTotales += apuesta.monto_apostado * apuesta.cuota_seleccionada;
     }
 
     const nuevoSaldo = usuario.saldo + gananciasTotales;
 
-    await connection.collection(USUARIO_COLLECTION).updateOne({ 
-        _id: new ObjectId(id) }, { 
-        $set: { saldo: nuevoSaldo }
-    })
+    const updateResult = await connection.collection(USUARIO_COLLECTION).updateOne(
+        { _id: new ObjectId(id) },
+        { $set: { saldo: nuevoSaldo } }
+    );
+
+    if (updateResult.modifiedCount === 0) {
+        throw new Error("No se pudo actualizar el saldo");
+    }
 
 
     return {
-        msn: "Apuestas ganadas procesadas",
+        msn: "Apuestas ganadas procesadas exitosamente",
         ganancias_totales: gananciasTotales,
-        saldo: nuevoSaldo
+        saldo_anterior: usuario.saldo,
+        saldo_nuevo: nuevoSaldo,
+        apuestas_procesadas: apuestasGanadas.length
     };
-
 }
 
 export const searchUsuarioModel = async (saldo) => {
@@ -138,7 +147,7 @@ export const totalApostado = async(id) => {
         {
             $group: {
                 _id: id_mongo,
-                total: { $sum: "$monto" }
+                total: { $sum: "$monto_apostado" }
             }
         }
     ]).toArray();
@@ -146,6 +155,55 @@ export const totalApostado = async(id) => {
     return result[0]?.total || 0;
 }
 
+export const getUsuariosMayorGanancia = async () => {
+    const connection = await connectionTournament();
+    
+    const resultado = await connection.collection(APUESTA_COLLECTION).aggregate([
+        {
+            $match: {
+                estado: "ganada"
+            }
+        },
+        
+        {
+            $group: {
+                _id: "$usuario_id",
+                ganancia_total: { $sum: "$posible_ganancia" },
+                total_apuestas_ganadas: { $sum: 1 },
+                monto_total_apostado: { $sum: "$monto_apostado" }
+            }
+        },
+        {
+            $lookup: {
+                from: "usuarios",
+                localField: "_id",
+                foreignField: "_id",
+                as: "usuario"
+            }
+        },
+        {
+            $unwind: "$usuario"
+        },
+        {
+            $sort: { ganancia_total: -1 }
+        },
+        {
+            $project: {
+                _id: 0,
+                usuario_id: "$_id",
+                nombre: "$usuario.nombre",
+                correo: "$usuario.correo",
+                pais: "$usuario.pais",
+                saldo_actual: "$usuario.saldo",
+                ganancia_total: { $round: ["$ganancia_total", 2] },
+                total_apuestas_ganadas: 1,
+                monto_total_apostado: { $round: ["$monto_total_apostado", 2] },
+            }
+        }
+    ]).toArray();
+    
+    return resultado;
+};
 
 export default{
     getUsuarioModel,
@@ -155,5 +213,6 @@ export default{
     searchUsuarioModel,
     usuarioPaisCorreo,
     deleteUsuarioModel,
-    totalApostado
+    totalApostado,
+    getUsuariosMayorGanancia
 }

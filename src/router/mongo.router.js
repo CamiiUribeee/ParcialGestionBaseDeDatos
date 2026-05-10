@@ -25,8 +25,8 @@ router.get("/post", async(req,res) =>{
     const db = await connection();
     const tournament = db.collection("tournament")
     const result = tournament.insertOne({
-        "nombre" : "Keiner",
-        "apellido" : "Ballesteros"
+        "nombre" : "Camila",
+        "apellido" : "Uribe"
     })
 
     res.json(result)
@@ -39,7 +39,7 @@ router.get("/getmongo/:id", async (req,res)=> {
     console.log(id);
     const objectId = new ObjectId(id)
     const result = await tournament.findOne({
-        nombre : "Keiner"
+        nombre : "Camila"
     })
     res.json(result)
 })

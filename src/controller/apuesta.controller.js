@@ -62,7 +62,6 @@ export const postApuestaMultiple = async (req, res) => {
         return res.status(201).json({ 
             "msn": "Apuestas registradas exitosamente",     
             data: apuestasData,
-            ids_apuestas: result.insertedIds
         });
     } catch (error) {
         return res.status(500).json({ "msn": "Error al registrar apuestas", error: error.message });

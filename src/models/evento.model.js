@@ -31,14 +31,15 @@ export const SearchEventoModel = async (evento) => {
 
 //eventos donde la cuota local sea mayor a 2.0
 export const eventoCuota = async() => {
-    (await getCollection()).find({cuota_local: {$gt: 2.0}}).toArray();
+    (await getCollection()).find({"cuotas.local": {$gt: 2.0}}).toArray();
     return result;
 }
 
 export const modificarCuota = async (id, nuevaCuota) => {
-    (await getCollection()).updateOne(
+    const collection = await getCollection();
+    const result = await collection.updateOne(
         { _id: new ObjectId(id) },
-        { $set: { cuota_visitante: nuevaCuota } }
+        { $set: { "cuotas.visitante": nuevaCuota } }
     );
     return result;
 }
@@ -70,23 +71,26 @@ export const deleteEventoModel = async () => {
 }
 
 export const promedioCuota = async () => {
-    const collection = (await getCollection()); 
+    const collection = await getCollection(); 
     const result = await collection.aggregate([
+        {
+            $addFields: {
+                cuotasArray: {
+                    $map: {
+                        input: { $objectToArray: "$cuotas" },
+                        as: "item",
+                        in: "$$item.v"
+                    }
+                }
+            }
+        },
         {
             $project: {
                 deporte: 1,
-                fecha: 1,
-                cuota_local: 1,
-                cuota_visitante: 1,
                 promedioCuota: {
                     $round: [
-                        {
-                            $divide: [
-                                { $add: ["$cuota_local", "$cuota_visitante"] },
-                                2
-                            ]
-                        },
-                        2 
+                        { $avg: "$cuotasArray" },
+                        2
                     ]
                 }
             }

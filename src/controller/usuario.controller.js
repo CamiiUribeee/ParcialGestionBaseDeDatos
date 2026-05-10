@@ -45,7 +45,12 @@ export const deleteUsuario = async(req,res) => {
 export const totalApostado = async(req,res) => {
     const id = req.params
     const data = await usuariomodel.totalApostado(id)
-    return res.status(200).json({"msn":"data",data})
+    return res.status(200).json({"msn":"Total Apostado",data})
+}
+
+const getUsuariosMayorGanancia = async(req,res) => {
+    const data = await usuariomodel.getUsuariosMayorGanancia()
+    return res.status(200).json({"msn":"Usuarios con mayor ganancia",data})
 }
 
 export default {
@@ -57,5 +62,6 @@ export default {
     searchUsuario,
     usuarioPaisCorreo,
     deleteUsuario,
-    totalApostado
+    totalApostado,
+    getUsuariosMayorGanancia
 }

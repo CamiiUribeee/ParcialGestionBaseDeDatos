@@ -2,6 +2,9 @@ import { connectionTournament } from "../services/mongo.service.js";
 import { ObjectId } from "mongodb";
 import { APUESTA_COLLECTION} from '../constants/apuesta.const.js'
 
+
+
+
 export const getApuestaModel = async () => {
     const connection = await connectionTournament();
     const result = await connection.collection(APUESTA_COLLECTION).find({}).toArray();
@@ -89,11 +92,6 @@ export const porDeporte = async(nombre) => {
     const data = await apuestaCollection.aggregate(
         [   
             {
-            $addFields: {
-                evento_id: { $toObjectId: "$evento_id" }
-            }
-            },
-            {
                 $lookup:{
                     from: 'eventos', //de donde voy a sacar los datos
                     localField: 'evento_id', //en mi collection cual campo relaciono
@@ -108,11 +106,6 @@ export const porDeporte = async(nombre) => {
                 $match: {
                     "evento.deporte": nombre
                 }
-            },
-            {
-                $addFields: {
-                usuario_id: { $toObjectId: "$usuario_id" }
-            }
             },
             {
                 $lookup:{
@@ -143,11 +136,6 @@ export const getLookup = async() => {
     const data = await apuestaCollection.aggregate(
         [   
             {
-                $addFields: {
-                    evento_id: { $toObjectId: "$evento_id" }
-                }
-            },
-            {
                 $lookup: {
                     from: 'eventos',
                     localField: 'evento_id',
@@ -158,11 +146,6 @@ export const getLookup = async() => {
             {
                 $unwind: "$evento"
             },  
-            {
-                $addFields: {
-                    usuario_id: { $toObjectId: "$usuario_id" }
-                }
-            },
             {
                 $lookup: {
                     from: 'usuarios',
