@@ -1,37 +1,36 @@
-
 import { ObjectId } from "mongodb";
-import { connectionTournament } from "../services/mongo.service.js"
+import { connectionTournament } from "../services/mongo.service.js";
 import { deleteApuestaModel } from "./apuesta.model.js";
 import { USUARIO_COLLECTION } from "../constants/usuario.const.js";
-import { APUESTA_COLLECTION} from '../constants/apuesta.const.js';
+import { APUESTA_COLLECTION } from '../constants/apuesta.const.js';
 import { EVENTO_COLLECTION } from "../constants/evento.const.js";
 
-export const getUsuarioModel = async() =>{
+export const getUsuarioModel = async () => {
     const connection = await connectionTournament();
     const result = await connection.collection(USUARIO_COLLECTION).find({}).toArray();
     return result;
 }
 
-export const postUsuarioModelUnico = async(json) =>{
-    console.log(JSON.stringify(json))
+export const postUsuarioModelUnico = async (json) => {
+    console.log(JSON.stringify(json));
     const connection = await connectionTournament();
-    const tournament = connection.collection(USUARIO_COLLECTION)
-    const result = await tournament.insertOne(json)
+    const tournament = connection.collection(USUARIO_COLLECTION);
+    const result = await tournament.insertOne(json);
     return result;
 }
 
-export const postUsuarioModelMultiple = async (json) =>{
+export const postUsuarioModelMultiple = async (json) => {
     const connection = await connectionTournament();
-    const tournament = connection.collection(USUARIO_COLLECTION)
-    const result = await tournament.insertMany(json)
+    const tournament = connection.collection(USUARIO_COLLECTION);
+    const result = await tournament.insertMany(json);
     return result;
 }
 
 export const updateSaldo = async (id) => {
     const connection = await connectionTournament();
-    
-    const usuario = await connection.collection(USUARIO_COLLECTION).findOne({ 
-        _id: new ObjectId(id) 
+
+    const usuario = await connection.collection(USUARIO_COLLECTION).findOne({
+        _id: new ObjectId(id)
     });
 
     if (!usuario) {
@@ -39,7 +38,7 @@ export const updateSaldo = async (id) => {
     }
 
     const apuestasGanadas = await connection.collection(APUESTA_COLLECTION).find({
-        usuario_id: new ObjectId(id), 
+        usuario_id: new ObjectId(id),
         estado: "ganada",
     }).toArray();
 
@@ -67,7 +66,6 @@ export const updateSaldo = async (id) => {
         throw new Error("No se pudo actualizar el saldo");
     }
 
-
     return {
         msn: "Apuestas ganadas procesadas exitosamente",
         ganancias_totales: gananciasTotales,
@@ -79,50 +77,52 @@ export const updateSaldo = async (id) => {
 
 export const searchUsuarioModel = async (saldo) => {
     const connection = await connectionTournament();
-    const result = await connection.collection(USUARIO_COLLECTION).find({saldo: { $gt: parseFloat(saldo)}}).toArray();
+    const result = await connection.collection(USUARIO_COLLECTION).find({ saldo: { $gt: parseFloat(saldo) } }).toArray();
     return result;
 }
 
-export const usuarioPaisCorreo = async() => {
+export const usuarioPaisCorreo = async () => {
     const connection = await connectionTournament();
-    const eventoBaloncesto = await connection.collection(EVENTO_COLLECTION).findOne(
-        { deporte: "Baloncesto" }, 
-        { projection: { _id: 1 } }  
-    );
-    
-    if (!eventoBaloncesto) {
+
+    const eventosBaloncesto = await connection.collection(EVENTO_COLLECTION).find(
+        { deporte: "baloncesto" },
+        { projection: { _id: 1 } }
+    ).toArray();
+
+    if (eventosBaloncesto.length === 0) {
         return {
             msn: "No se encontraron eventos de baloncesto",
             data: []
         };
     }
-    
+
+    const eventosIds = eventosBaloncesto.map(e => e._id);
+
     const apuestas = await connection.collection(APUESTA_COLLECTION).find({
-        evento_id: eventoBaloncesto._id.toString()  
+        evento_id: { $in: eventosIds }
     }).toArray();
-    
+
     if (apuestas.length === 0) {
         return {
             msn: "No hay apuestas para eventos de baloncesto",
             data: []
         };
     }
-    
-    
-    const usuariosIds = [...new Set(apuestas.map(apuesta => apuesta.usuario_id))];
-    
+
+    const usuariosIds = [...new Set(apuestas.map(apuesta => apuesta.usuario_id.toString()))];
+
     const usuarios = await connection.collection(USUARIO_COLLECTION).find({
         _id: { $in: usuariosIds.map(id => new ObjectId(id)) }
     }, {
-        projection: { 
-            país: 1,      
-            correo: 1,    
-            _id: 0        
+        projection: {
+            pais: 1,
+            correo: 1,
+            _id: 0
         }
     }).toArray();
-    
+
     return {
-        msn: `Usuarios que apostaron en baloncesto (evento: ${eventoBaloncesto._id})`,
+        msn: "Usuarios que apostaron en baloncesto",
         total_apostadores: usuarios.length,
         data: usuarios
     };
@@ -130,9 +130,9 @@ export const usuarioPaisCorreo = async() => {
 
 export const deleteUsuarioModel = async (id) => {
     const connection = await connectionTournament();
-    const apuestasEliminadas = deleteApuestaModel(id);
-    const result = await connection.collection(USUARIO_COLLECTION).deleteOne({_id: new ObjectId(id)});
-     return {
+    const apuestasEliminadas = await deleteApuestaModel(id);
+    const result = await connection.collection(USUARIO_COLLECTION).deleteOne({ _id: new ObjectId(id) });
+    return {
         msn: `Usuario con ID ${id} eliminado`,
         usuario_eliminado: result,
         apuestas_eliminadas: apuestasEliminadas.deletedCount,
@@ -140,31 +140,45 @@ export const deleteUsuarioModel = async (id) => {
     };
 }
 
-export const totalApostado = async(id) => {
+export const totalApostado = async () => {
     const connection = await connectionTournament();
-    const id_mongo = new ObjectId(id)
     const result = await connection.collection(APUESTA_COLLECTION).aggregate([
         {
             $group: {
-                _id: id_mongo,
+                _id: "$usuario_id",
                 total: { $sum: "$monto_apostado" }
             }
-        }
+        },
+        {
+            $lookup: {
+                from: "usuarios",
+                localField: "_id",
+                foreignField: "_id",
+                as: "usuario"
+            }
+        },
+        { $unwind: "$usuario" },
+        {
+            $project: {
+                _id: 0,
+                nombre: "$usuario.nombre",
+                correo: "$usuario.correo",
+                total_apostado: { $round: ["$total", 2] }
+            }
+        },
+        { $sort: { total_apostado: -1 } }
     ]).toArray();
 
-    return result[0]?.total || 0;
+    return result;
 }
 
 export const getUsuariosMayorGanancia = async () => {
     const connection = await connectionTournament();
-    
+
     const resultado = await connection.collection(APUESTA_COLLECTION).aggregate([
         {
-            $match: {
-                estado: "ganada"
-            }
+            $match: { estado: "ganada" }
         },
-        
         {
             $group: {
                 _id: "$usuario_id",
@@ -181,12 +195,8 @@ export const getUsuariosMayorGanancia = async () => {
                 as: "usuario"
             }
         },
-        {
-            $unwind: "$usuario"
-        },
-        {
-            $sort: { ganancia_total: -1 }
-        },
+        { $unwind: "$usuario" },
+        { $sort: { ganancia_total: -1 } },
         {
             $project: {
                 _id: 0,
@@ -197,15 +207,15 @@ export const getUsuariosMayorGanancia = async () => {
                 saldo_actual: "$usuario.saldo",
                 ganancia_total: { $round: ["$ganancia_total", 2] },
                 total_apuestas_ganadas: 1,
-                monto_total_apostado: { $round: ["$monto_total_apostado", 2] },
+                monto_total_apostado: { $round: ["$monto_total_apostado", 2] }
             }
         }
     ]).toArray();
-    
-    return resultado;
-};
 
-export default{
+    return resultado;
+}
+
+export default {
     getUsuarioModel,
     postUsuarioModelUnico,
     postUsuarioModelMultiple,

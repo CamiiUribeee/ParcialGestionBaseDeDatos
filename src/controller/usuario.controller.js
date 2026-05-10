@@ -1,7 +1,6 @@
 import usuariomodel from "../models/usuariomodel.js"
 
 export const getUsuario = async(req,res) => {
-
     const data = await usuariomodel.getUsuarioModel();
     return res.status(200).json({"msn":"Hello getUser",data})
 }
@@ -18,12 +17,11 @@ export const postUsuarioMultiple = async(req,res) => {
     res.send({data: json})
 }
 
-
-export const updateSaldo = (req,res) => {
-    const {id} = req.param
-    const result = usuariomodel.updateSaldo(id)
-     return res.status(200).json({ "msn": "Saldo de usuario actualizado ", result })
-}   
+export const updateSaldo = async (req,res) => {
+    const {id} = req.params
+    const result = await usuariomodel.updateSaldo(id)
+    return res.status(200).json({ "msn": "Saldo de usuario actualizado ", result })
+}
 
 export const searchUsuario = async(req,res) => {
     const saldo = req.params.saldo;
@@ -39,12 +37,11 @@ export const usuarioPaisCorreo = async(req,res) => {
 export const deleteUsuario = async(req,res) => {
     const {id} = req.params;
     const result = await usuariomodel.deleteUsuarioModel(id);
-     return res.status(200).json({ "msn": `Usuario con ID ${id} eliminado`, result })
-}   
+    return res.status(200).json({ "msn": `Usuario con ID ${id} eliminado`, result })
+}
 
 export const totalApostado = async(req,res) => {
-    const id = req.params
-    const data = await usuariomodel.totalApostado(id)
+    const data = await usuariomodel.totalApostado()
     return res.status(200).json({"msn":"Total Apostado",data})
 }
 
@@ -61,7 +58,6 @@ export default {
     deleteUsuario,
     searchUsuario,
     usuarioPaisCorreo,
-    deleteUsuario,
     totalApostado,
     getUsuariosMayorGanancia
 }

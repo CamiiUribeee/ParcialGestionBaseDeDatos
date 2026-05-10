@@ -71,10 +71,38 @@ export const getEnCurso = async() => {
     const connection = await connectionTournament();
     const apuestaCollection = connection.collection(APUESTA_COLLECTION);
 
-    const result = apuestaCollection.find(
-        {estado: 'en_curso'},
-        {projection: {monto_apostado: 1, _id:0}}
-    ).toArray();
+    const result = await apuestaCollection.aggregate([
+        {
+            $match: { estado: 'en_curso' }
+        },
+        {
+            $lookup: {
+                from: 'usuarios',
+                localField: 'usuario_id',
+                foreignField: '_id',
+                as: 'usuario'
+            }
+        },
+        { $unwind: '$usuario' },
+        {
+            $lookup: {
+                from: 'eventos',
+                localField: 'evento_id',
+                foreignField: '_id',
+                as: 'evento'
+            }
+        },
+        { $unwind: '$evento' },
+        {
+            $project: {
+                _id: 0,
+                nombre_usuario: '$usuario.nombre',
+                deporte: '$evento.deporte',
+                posible_ganancia: 1,
+                monto_apostado: 1
+            }
+        }
+    ]).toArray();
 
     return result;
 }
