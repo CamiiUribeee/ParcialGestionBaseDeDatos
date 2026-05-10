@@ -57,6 +57,7 @@ export const deleteApuestaValidator = checkSchema({
 }, ["params"]);
 
 
+
 export const updateApuestaValidator = checkSchema({
 
     id: {
@@ -80,4 +81,4 @@ export const updateApuestaValidator = checkSchema({
         }
     }
 
-}, ["body", "params"]);
+});
