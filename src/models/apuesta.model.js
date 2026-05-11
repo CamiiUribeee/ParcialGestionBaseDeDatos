@@ -73,7 +73,7 @@ export const getEnCurso = async() => {
 
     const result = await apuestaCollection.aggregate([
         {
-            $match: { estado: 'en_curso' }
+            $match: { estado: 'en curso' }
         },
         {
             $lookup: {
@@ -94,12 +94,12 @@ export const getEnCurso = async() => {
         },
         { $unwind: '$evento' },
         {
-            $project: {
+            $project: {    //lo que se va a mostrar al hacer la consulta, ahí debería quitar monto porque no me lo piden
                 _id: 0,
                 nombre_usuario: '$usuario.nombre',
                 deporte: '$evento.deporte',
                 posible_ganancia: 1,
-                monto_apostado: 1
+                monto: 1
             }
         }
     ]).toArray();
